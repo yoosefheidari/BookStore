@@ -5,7 +5,7 @@ namespace BookStore.Aggregates.Book
 {
     public class Price : ValueObject
     {
-        //private Price(decimal value) { Value = value; }
+        private Price() { }
         public decimal Value { get; }
         public Price(decimal value) { Value = value; }
         protected override IEnumerable<object> GetAtomicValues()

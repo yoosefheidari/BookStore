@@ -1,4 +1,5 @@
-﻿using BookStore.Data.Comment;
+﻿using BookStore.Aggregates.Comment;
+using BookStore.Data.Comment;
 using BookStore.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using Volo.Abp.EntityFrameworkCore;
 
 namespace BookStore.Repositories
 {
-    public class CommentRepository : EfCoreRepository<BookStoreDbContext, BookStore.Aggregates.Comment.Comment, int>, ICommentRepository
+    public class CommentRepository : EfCoreRepository<BookStoreDbContext, BookStore.Aggregates.Comment.Comment, CommentId>, ICommentRepository
     {
         public CommentRepository(IDbContextProvider<BookStoreDbContext> dbContextProvider) : base(dbContextProvider)
         {

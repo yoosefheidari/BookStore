@@ -1,10 +1,10 @@
 ﻿using System;
-using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.Domain.Entities;
 using Volo.Abp.MultiTenancy;
 
 namespace BookStore.Aggregates.Book
 {
-    public class Book : FullAuditedAggregateRoot<int>, IMultiTenant
+    public class Book : AggregateRoot<BookId>, IMultiTenant
     {
         public string Title { get; private set; }
         public Price Price { get; private set; }

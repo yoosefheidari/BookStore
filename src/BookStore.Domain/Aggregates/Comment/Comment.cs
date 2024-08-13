@@ -4,7 +4,7 @@ using Volo.Abp.MultiTenancy;
 
 namespace BookStore.Aggregates.Comment
 {
-    public class Comment : FullAuditedAggregateRoot<int>, IMultiTenant
+    public class Comment : FullAuditedAggregateRoot<CommentId>, IMultiTenant
     {
         public string Description { get; set; }
         public DateTime CreatedAt { get; set; }

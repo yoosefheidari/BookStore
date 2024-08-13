@@ -1,3 +1,4 @@
+using BookStore.Aggregates.Book;
 using BookStore.Aggregates.Comment;
 using BookStore.Aggregates.Store;
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +61,7 @@ public class BookStoreDbContext :
     public DbSet<Aggregates.Book.Book> Books { get; set; }
     public DbSet<Store> Stores { get; set; }
     public DbSet<Comment> Comments { get; set; }
+    public DbSet<BookCover> bookCovers { get; set; }
 
     #endregion
 
@@ -98,7 +100,8 @@ public class BookStoreDbContext :
         {
             b.ToTable(BookStoreConsts.DbTablePrefix + "Books", BookStoreConsts.DbSchema);
             b.HasKey(b => b.Id);
-            //b.Property(x => x.Id).HasConversion(v => v.Id, z => new BookId(z)).ValueGeneratedOnAdd();
+
+            b.Property(x => x.Id).HasConversion(v => v.Id, z => new BookId(z)).ValueGeneratedOnAdd();
             //b.Property(x => x.StoreId).HasConversion(v => v.Id, z => new StoreId(z));
             b.ConfigureByConvention();
             // b.HasMany("Comments").WithOne("Book").HasForeignKey("BookId");
@@ -109,7 +112,7 @@ public class BookStoreDbContext :
         {
             b.ToTable(BookStoreConsts.DbTablePrefix + "Comments", BookStoreConsts.DbSchema);
             b.HasKey(b => b.Id);
-            // b.Property(x => x.Id).HasConversion(v => v.Id, z => new CommentId(z)).ValueGeneratedOnAdd();
+            b.Property(x => x.Id).HasConversion(v => v.Id, z => new CommentId(z)).ValueGeneratedOnAdd();
             // b.Property(x => x.BookId).HasConversion(v => v.Id, z => new BookId(z));
             b.ConfigureByConvention();
             b.OwnsOne(c => c.Rating).Property(d => d.Rate).HasColumnName("Rate");
@@ -119,9 +122,18 @@ public class BookStoreDbContext :
         {
             b.ToTable(BookStoreConsts.DbTablePrefix + "Stores", BookStoreConsts.DbSchema);
             b.HasKey(b => b.Id);
-            //b.Property(x => x.Id).HasConversion(v => v.Id, z => new StoreId(z)).ValueGeneratedOnAdd();
+            b.Property(x => x.Id).HasConversion(v => v.Id, z => new StoreId(z)).ValueGeneratedOnAdd();
             b.ConfigureByConvention();
             //b.HasMany("Books").WithOne("Store").HasForeignKey("StoreId");
+        });
+
+        builder.Entity<BookCover>(b =>
+        {
+            b.ToTable(BookStoreConsts.DbTablePrefix + "BookCovers", BookStoreConsts.DbSchema);
+            b.HasKey(b => b.Id);
+            b.Property(x => x.Id).HasConversion(v => v.Id, z => new BookCoverId(z)).ValueGeneratedOnAdd();
+            b.ConfigureByConvention();
+            b.HasOne(x => x.Book).WithMany().HasForeignKey(c => c.BookId);
         });
     }
 }
