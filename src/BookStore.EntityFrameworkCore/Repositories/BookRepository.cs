@@ -8,20 +8,25 @@ using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.MultiTenancy;
+using Volo.Abp.Uow;
 
 namespace BookStore.Repositories
 {
     public class BookRepository : EfCoreRepository<BookStoreDbContext, Aggregates.Book.Book, BookId>, IBookRepository
     {
         private readonly ICurrentTenant _currentTenant;
-        public BookRepository(IDbContextProvider<BookStoreDbContext> dbContextProvider, ICurrentTenant currentTenant) : base(dbContextProvider)
+        private readonly IUnitOfWork _unitOfWork;
+        public BookRepository(IDbContextProvider<BookStoreDbContext> dbContextProvider, ICurrentTenant currentTenant, IUnitOfWork unitOfWork) : base(dbContextProvider)
         {
             _currentTenant = currentTenant;
+            _currentTenant.Change(new Guid("14FCFBF0-A85C-46EC-8940-5F587AAEC761"));
+            _unitOfWork = unitOfWork;
         }
 
-        public Task AddBook(Aggregates.Book.Book book)
+        public async Task AddBook(Aggregates.Book.Book book)
         {
-            throw new NotImplementedException();
+            var t = await DbContext.Books.AddAsync(book);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<List<Aggregates.Book.Book>> GetBooks()
@@ -29,7 +34,6 @@ namespace BookStore.Repositories
 
             try
             {
-                _currentTenant.Change(new Guid("14FCFBF0-A85C-46EC-8940-5F587AAEC761"));
                 var t = await DbContext.Books.ToListAsync();
                 return t;
             }

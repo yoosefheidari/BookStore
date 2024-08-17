@@ -8,6 +8,6 @@
         public string PublishDate { get; set; }
         public string Price { get; set; }
         public string Description { get; set; }
-        public string Rating { get; set; }
+        public double Rating { get; set; }
     }
 }

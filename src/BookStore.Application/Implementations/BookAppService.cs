@@ -1,11 +1,10 @@
 ﻿using BookStore.Aggregates.Book;
-using BookStore.Aggregates.Store;
 using BookStore.Contracts;
 using BookStore.Data.Book;
-using BookStore.Data.Store;
+using BookStore.Data.Comment;
 using BookStore.Dtos;
 using BookStore.Localization;
-using System;
+using BookStore.Services.Contracts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
@@ -18,77 +17,43 @@ namespace BookStore.Implementations
     public class BookAppService : ApplicationService, IBookAppService, IScopedDependency
     {
         private readonly IBookRepository _bookRepository;
-        private readonly IStoreRepository _storeRepository;
+        private readonly ICommentRepository _commentRepository;
+        private readonly IBookService _bookService;
 
-        public BookAppService(IBookRepository bookRepository, IStoreRepository storeRepository)
+        public BookAppService(IBookRepository bookRepository, IBookService bookService, ICommentRepository commentRepository)
         {
             _bookRepository = bookRepository;
             LocalizationResource = typeof(BookStoreResource);
-            _storeRepository = storeRepository;
+            _bookService = bookService;
+            _commentRepository = commentRepository;
         }
 
         public async Task AddBook(AddBookInputDto bookInfo)
         {
-            throw new NotImplementedException();
-            // await _bookAppService.AddBook(bookInfo);
+            var book = ObjectMapper.Map<AddBookInputDto, Book>(bookInfo);
+            await _bookRepository.AddBook(book);
         }
 
-        public async Task AddComment(AddCommentInputDto commentInfo)
+        public async Task<List<BookOutputDto>> GetBooks()
         {
-            throw new NotImplementedException();
-
-            //  await _bookAppService.AddComment(commentInfo);
-
-        }
-
-        public async Task AddDislike(LikeInputDto likeInfo)
-        {
-            throw new NotImplementedException();
-
-            // await _bookAppService.AddDislike(likeInfo);
-
-        }
-
-        public async Task AddLike(LikeInputDto likeInfo)
-        {
-            throw new NotImplementedException();
-
-            //   await _bookAppService.AddLike(likeInfo);
-
-        }
-
-        public async Task<List<CommentOutputDto>> GetComments()
-        {
-            throw new NotImplementedException();
-
-            // return await _bookAppService.GetComments();
-
-        }
-
-        public async Task<List<BookOutputDto>> GetStoreBooks()
-        {
-            var outputBooks = new List<BookOutputDto>();
             var books = await _bookRepository.GetBooks();
-            foreach (var item in books)
+
+            var mappedResult = ObjectMapper.Map<List<Book>, List<BookOutputDto>>(books);
+
+            foreach (var book in mappedResult)
             {
-                var result = ObjectMapper.Map<Book, BookOutputDto>(item);
-                outputBooks.Add(result);
+                var comments = await _commentRepository.GetCommentsByBookId(book.Id);
+                if (comments != null && comments.Count > 0)
+                {
+                    var rating = _bookService.GetBookRating(comments);
+                    book.Rating = rating;
+                }
+
             }
-            return outputBooks;
+
+            return mappedResult;
         }
 
-        public async Task<List<StoreOutputDto>> GetStores()
-        {
-            var outputBooks = new List<StoreOutputDto>();
-            var books = await _storeRepository.GetStores();
-            foreach (var item in books)
-            {
-                var result = ObjectMapper.Map<Store, StoreOutputDto>(item);
-                outputBooks.Add(result);
-            }
-            return outputBooks;
 
-            // return await _bookAppService.GetStores();
-        }
     }
 }

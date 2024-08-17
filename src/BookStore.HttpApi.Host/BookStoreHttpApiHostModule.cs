@@ -27,6 +27,8 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
 using Volo.Abp.AutoMapper;
+using Volo.Abp.BlobStoring;
+using Volo.Abp.BlobStoring.FileSystem;
 using Volo.Abp.Modularity;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.OpenIddict;
@@ -48,7 +50,8 @@ namespace BookStore;
     typeof(BookStoreEntityFrameworkCoreModule),
     typeof(AbpAccountWebOpenIddictModule),
     typeof(AbpSwashbuckleModule),
-    typeof(AbpAspNetCoreSerilogModule)
+    typeof(AbpAspNetCoreSerilogModule),
+    typeof(AbpBlobStoringFileSystemModule)
     )]
 public class BookStoreHttpApiHostModule : AbpModule
 {
@@ -96,6 +99,17 @@ public class BookStoreHttpApiHostModule : AbpModule
         Configure<AbpAutoMapperOptions>(options =>
         {
             options.AddMaps<BookStoreApplicationModule>();
+        });
+
+        Configure<AbpBlobStoringOptions>(options =>
+        {
+            options.Containers.ConfigureDefault(container =>
+            {
+                container.UseFileSystem(fileSystem =>
+                {
+                    fileSystem.BasePath = "C:\\my-files";
+                });
+            });
         });
 
         if (!configuration.GetValue<bool>("App:DisablePII"))

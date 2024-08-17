@@ -17,6 +17,7 @@ namespace BookStore.Repositories
         public StoreRepository(IDbContextProvider<BookStoreDbContext> dbContextProvider, ICurrentTenant currentTenant) : base(dbContextProvider)
         {
             _currentTenant = currentTenant;
+            _currentTenant.Change(new Guid("14FCFBF0-A85C-46EC-8940-5F587AAEC761"));
         }
 
         public Task AddStore(Aggregates.Store.Store store)
@@ -28,7 +29,7 @@ namespace BookStore.Repositories
         {
             try
             {
-                _currentTenant.Change(new Guid("14FCFBF0-A85C-46EC-8940-5F587AAEC761"));
+
                 var t = await DbContext.Stores.ToListAsync();
                 return t;
             }

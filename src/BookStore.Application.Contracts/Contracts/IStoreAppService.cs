@@ -6,9 +6,8 @@ using Volo.Abp.DependencyInjection;
 
 namespace BookStore.Contracts
 {
-    public interface IBookAppService : IApplicationService, IScopedDependency
+    public interface IStoreAppService : IApplicationService, IScopedDependency
     {
-        Task AddBook(AddBookInputDto bookInfo);
-        Task<List<BookOutputDto>> GetBooks();
+        Task<List<StoreOutputDto>> GetStores();
     }
 }

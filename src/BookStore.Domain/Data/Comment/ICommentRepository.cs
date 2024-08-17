@@ -9,6 +9,7 @@ namespace BookStore.Data.Comment
     public interface ICommentRepository : IBasicRepository<BookStore.Aggregates.Comment.Comment, CommentId>, IScopedDependency
     {
         Task<List<BookStore.Aggregates.Comment.Comment>> GetComments();
+        Task<List<BookStore.Aggregates.Comment.Comment>> GetCommentsByBookId(int bookId);
         Task AddComment(BookStore.Aggregates.Comment.Comment comment);
         Task AddLike(int CommentId);
         Task AddDislike(int CommentId);

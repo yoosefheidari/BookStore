@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace BookStore.Dtos
 {
     public class SaveBlobInputDto
     {
-        public byte[] Content { get; set; }
-
-        [Required]
-        public string Name { get; set; }
+        public List<IFormFile> Images { get; set; }
     }
 }
