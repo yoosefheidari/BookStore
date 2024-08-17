@@ -36,7 +36,8 @@ namespace BookStore.Implementations
             long length = input.Image.Length;
             if (length < 0)
                 throw new BusinessException("image cannot be empty!!");
-            var name = input.Image.FileName;
+            var randomName = GuidGenerator.Create().ToString();
+            var name = randomName + "-" + input.Image.FileName;
             using var fileStream = input.Image.OpenReadStream();
             byte[] bytes = new byte[length];
             fileStream.Read(bytes, 0, (int)input.Image.Length);

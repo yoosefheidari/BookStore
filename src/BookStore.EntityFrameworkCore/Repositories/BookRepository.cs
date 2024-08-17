@@ -4,6 +4,7 @@ using BookStore.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
@@ -48,6 +49,12 @@ namespace BookStore.Repositories
             {
                 return new List<Book>();
             }
+        }
+
+        public async Task<List<string>> GetCovers(int bookId)
+        {
+            var result = await DbContext.bookCovers.ToListAsync();
+            return result.Where(x => x.BookId.Id == bookId).Select(p => p.Path).ToList();
         }
     }
 }

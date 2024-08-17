@@ -11,5 +11,6 @@ namespace BookStore.Data.Book
         Task<List<BookStore.Aggregates.Book.Book>> GetBooks();
         Task<int> AddBook(BookStore.Aggregates.Book.Book book);
         Task AddCover(BookCover cover);
+        Task<List<string>> GetCovers(int bookId);
     }
 }

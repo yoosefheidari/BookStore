@@ -57,6 +57,8 @@ namespace BookStore.Implementations
 
             var mappedResult = ObjectMapper.Map<List<Book>, List<BookOutputDto>>(books);
 
+
+
             foreach (var book in mappedResult)
             {
                 var cache = _cacheService.Get(book.Id.ToString());
@@ -72,6 +74,14 @@ namespace BookStore.Implementations
                         var bookRating = new BookRatingCacheDto() { Rating = rating };
                         _cacheService.Set(book.Id.ToString(), bookRating);
                     }
+                }
+
+                var covers = await _bookRepository.GetCovers(book.Id);
+                foreach (var path in covers)
+                {
+                    var input = new GetBlobRequestDto() { Name = path };
+                    var image = await _fileAppService.GetBlobAsync(input);
+                    book.Covers.Add(image.Content);
                 }
             }
 
