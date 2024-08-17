@@ -27,5 +27,19 @@ namespace BookStore.Controllers.Comment
         {
             return Ok(await _commentAppService.GetComments());
         }
+
+        [HttpPost("AddLike")]
+        public async Task<IActionResult> AddLike(LikeInputDto likeInfo)
+        {
+            await _commentAppService.AddLike(likeInfo);
+            return Ok();
+        }
+
+        [HttpPost("AddDislike")]
+        public async Task<IActionResult> AddDislike(LikeInputDto likeInfo)
+        {
+            await _commentAppService.AddDislike(likeInfo);
+            return Ok();
+        }
     }
 }

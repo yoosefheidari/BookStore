@@ -34,5 +34,7 @@ public class BookStoreApplicationAutoMapperProfile : Profile
         CreateMap<Comment, CommentOutputDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Id));
 
+        CreateMap<SaveCoverInputDto, BookCover>()
+           .ForMember(dest => dest.BookId, opt => opt.MapFrom(src => new BookId(src.BookId)));
     }
 }

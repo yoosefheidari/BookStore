@@ -1,7 +1,5 @@
 ﻿using BookStore.Contracts;
-using BookStore.Dtos;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace BookStore.Controllers.File
 {
@@ -15,11 +13,11 @@ namespace BookStore.Controllers.File
             _fileAppService = fileAppService;
         }
 
-        [HttpPost("SaveImage")]
-        public async Task<IActionResult> SaveImages(SaveBlobInputDto images)
-        {
-            await _fileAppService.SaveBlobAsync(images);
-            return Ok();
-        }
+        //[HttpPost("SaveImage")]
+        //public async Task<IActionResult> SaveImages(SaveBlobInputDto images)
+        //{
+        //    await _fileAppService.SaveBlobAsync(images);
+        //    return Ok();
+        //}
     }
 }

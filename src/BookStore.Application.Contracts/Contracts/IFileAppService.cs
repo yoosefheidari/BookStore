@@ -7,7 +7,7 @@ namespace BookStore.Contracts
 {
     public interface IFileAppService : IApplicationService, IScopedDependency
     {
-        Task SaveBlobAsync(SaveBlobInputDto input);
+        Task<string> SaveBlobAsync(SaveBlobInputDto input);
         Task<BlobDto> GetBlobAsync(GetBlobRequestDto input);
     }
 }

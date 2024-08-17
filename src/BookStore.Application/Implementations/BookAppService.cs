@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Caching;
 using Volo.Abp.DependencyInjection;
 
 namespace BookStore.Implementations
@@ -19,19 +20,35 @@ namespace BookStore.Implementations
         private readonly IBookRepository _bookRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly IBookService _bookService;
+        private readonly IFileAppService _fileAppService;
+        private readonly IDistributedCache<BookRatingCacheDto> _cacheService;
 
-        public BookAppService(IBookRepository bookRepository, IBookService bookService, ICommentRepository commentRepository)
+        public BookAppService(IBookRepository bookRepository
+            , IBookService bookService, ICommentRepository commentRepository
+            , IFileAppService fileAppService
+            , IDistributedCache<BookRatingCacheDto> cacheService)
         {
             _bookRepository = bookRepository;
             LocalizationResource = typeof(BookStoreResource);
             _bookService = bookService;
             _commentRepository = commentRepository;
+            _fileAppService = fileAppService;
+            _cacheService = cacheService;
         }
 
         public async Task AddBook(AddBookInputDto bookInfo)
         {
             var book = ObjectMapper.Map<AddBookInputDto, Book>(bookInfo);
-            await _bookRepository.AddBook(book);
+            var bookId = await _bookRepository.AddBook(book);
+
+            foreach (var image in bookInfo.Images)
+            {
+                var fileInfo = new SaveBlobInputDto { BookId = bookId, Image = image };
+                var path = await _fileAppService.SaveBlobAsync(fileInfo);
+                var coverInfo = new SaveCoverInputDto { BookId = bookId, Path = path };
+                var cover = ObjectMapper.Map<SaveCoverInputDto, BookCover>(coverInfo);
+                await _bookRepository.AddCover(cover);
+            }
         }
 
         public async Task<List<BookOutputDto>> GetBooks()
@@ -42,13 +59,20 @@ namespace BookStore.Implementations
 
             foreach (var book in mappedResult)
             {
-                var comments = await _commentRepository.GetCommentsByBookId(book.Id);
-                if (comments != null && comments.Count > 0)
+                var cache = _cacheService.Get(book.Id.ToString());
+                if (cache != null)
+                    book.Rating = cache.Rating;
+                else
                 {
-                    var rating = _bookService.GetBookRating(comments);
-                    book.Rating = rating;
+                    var comments = await _commentRepository.GetCommentsByBookId(book.Id);
+                    if (comments != null && comments.Count > 0)
+                    {
+                        var rating = _bookService.GetBookRating(comments);
+                        book.Rating = rating;
+                        var bookRating = new BookRatingCacheDto() { Rating = rating };
+                        _cacheService.Set(book.Id.ToString(), bookRating);
+                    }
                 }
-
             }
 
             return mappedResult;

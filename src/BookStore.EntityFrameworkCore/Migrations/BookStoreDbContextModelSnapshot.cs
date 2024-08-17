@@ -2075,7 +2075,7 @@ namespace BookStore.Migrations
 
             modelBuilder.Entity("BookStore.Aggregates.Book.Book", b =>
                 {
-                    b.OwnsOne("BookStore.Aggregates.Book.Price", "Price", b1 =>
+                    b.OwnsOne("BookStore.Aggregates.Book.Book.Price#BookStore.Aggregates.Book.Price", "Price", b1 =>
                         {
                             b1.Property<int>("BookId")
                                 .HasColumnType("int");
@@ -2086,7 +2086,7 @@ namespace BookStore.Migrations
 
                             b1.HasKey("BookId");
 
-                            b1.ToTable("AppBooks");
+                            b1.ToTable("AppBooks", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("BookId");
@@ -2109,7 +2109,7 @@ namespace BookStore.Migrations
 
             modelBuilder.Entity("BookStore.Aggregates.Comment.Comment", b =>
                 {
-                    b.OwnsOne("BookStore.Aggregates.Comment.Rating", "Rating", b1 =>
+                    b.OwnsOne("BookStore.Aggregates.Comment.Comment.Rating#BookStore.Aggregates.Comment.Rating", "Rating", b1 =>
                         {
                             b1.Property<int>("CommentId")
                                 .HasColumnType("int");
@@ -2120,7 +2120,7 @@ namespace BookStore.Migrations
 
                             b1.HasKey("CommentId");
 
-                            b1.ToTable("AppComments");
+                            b1.ToTable("AppComments", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("CommentId");

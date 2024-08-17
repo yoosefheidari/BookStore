@@ -34,7 +34,8 @@ namespace BookStore.Repositories
 
         public async Task AddDislike(int CommentId)
         {
-            var comment = await DbContext.Comments.Where(x => x.Id.Id == CommentId).FirstOrDefaultAsync();
+            var comments = await DbContext.Comments.ToListAsync();
+            var comment = comments.Where(x => x.Id.Id == CommentId).FirstOrDefault();
             if (comment != null) comment.DislikeCount++;
             else throw new BusinessException("there is no comment!!");
             await _unitOfWork.SaveChangesAsync();
@@ -42,7 +43,8 @@ namespace BookStore.Repositories
 
         public async Task AddLike(int CommentId)
         {
-            var comment = await DbContext.Comments.Where(x => x.Id.Id == CommentId).FirstOrDefaultAsync();
+            var comments = await DbContext.Comments.ToListAsync();
+            var comment = comments.Where(x => x.Id.Id == CommentId).FirstOrDefault();
             if (comment != null) comment.LikeCount++;
             else throw new BusinessException("there is no comment!!");
             await _unitOfWork.SaveChangesAsync();

@@ -1,6 +1,5 @@
 ﻿using BookStore.Contracts;
 using BookStore.Dtos;
-using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
@@ -30,21 +29,20 @@ namespace BookStore.Implementations
             };
         }
 
-        public async Task SaveBlobAsync(SaveBlobInputDto input)
+        public async Task<string> SaveBlobAsync(SaveBlobInputDto input)
         {
             var data = new List<byte[]>();
 
-            foreach (IFormFile image in input.Images)
-            {
-                long length = image.Length;
-                if (length < 0)
-                    throw new BusinessException("image cannot be empty!!");
-                var name = image.FileName;
-                using var fileStream = image.OpenReadStream();
-                byte[] bytes = new byte[length];
-                fileStream.Read(bytes, 0, (int)image.Length);
-                await _fileContainer.SaveAsync(name, bytes);
-            }
+            long length = input.Image.Length;
+            if (length < 0)
+                throw new BusinessException("image cannot be empty!!");
+            var name = input.Image.FileName;
+            using var fileStream = input.Image.OpenReadStream();
+            byte[] bytes = new byte[length];
+            fileStream.Read(bytes, 0, (int)input.Image.Length);
+            await _fileContainer.SaveAsync(name, bytes);
+            return name;
+
 
         }
     }

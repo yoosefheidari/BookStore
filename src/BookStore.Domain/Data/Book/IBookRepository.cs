@@ -9,6 +9,7 @@ namespace BookStore.Data.Book
     public interface IBookRepository : IBasicRepository<BookStore.Aggregates.Book.Book, BookId>, IScopedDependency
     {
         Task<List<BookStore.Aggregates.Book.Book>> GetBooks();
-        Task AddBook(BookStore.Aggregates.Book.Book book);
+        Task<int> AddBook(BookStore.Aggregates.Book.Book book);
+        Task AddCover(BookCover cover);
     }
 }

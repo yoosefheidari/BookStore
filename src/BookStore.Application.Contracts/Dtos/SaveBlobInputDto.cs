@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
 
 namespace BookStore.Dtos
 {
     public class SaveBlobInputDto
     {
-        public List<IFormFile> Images { get; set; }
+        public int BookId { get; set; }
+        public IFormFile Image { get; set; }
     }
 }

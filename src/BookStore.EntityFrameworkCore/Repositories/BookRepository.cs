@@ -23,9 +23,16 @@ namespace BookStore.Repositories
             _unitOfWork = unitOfWork;
         }
 
-        public async Task AddBook(Aggregates.Book.Book book)
+        public async Task<int> AddBook(Aggregates.Book.Book book)
         {
-            var t = await DbContext.Books.AddAsync(book);
+            await DbContext.Books.AddAsync(book);
+            await DbContext.SaveChangesAsync();
+            return book.Id.Id;
+        }
+
+        public async Task AddCover(BookCover cover)
+        {
+            await DbContext.bookCovers.AddAsync(cover);
             await _unitOfWork.SaveChangesAsync();
         }
 

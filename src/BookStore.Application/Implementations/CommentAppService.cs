@@ -2,7 +2,6 @@
 using BookStore.Contracts;
 using BookStore.Data.Comment;
 using BookStore.Dtos;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
@@ -26,13 +25,14 @@ namespace BookStore.Implementations
             await _commentRepository.AddComment(comment);
         }
 
-        public Task AddDislike(LikeInputDto likeInfo)
+        public async Task AddDislike(LikeInputDto likeInfo)
         {
-            throw new NotImplementedException();
+            await _commentRepository.AddDislike(likeInfo.CommentId);
         }
 
         public async Task AddLike(LikeInputDto likeInfo)
         {
+            await _commentRepository.AddLike(likeInfo.CommentId);
         }
 
         public async Task<List<CommentOutputDto>> GetComments()
