@@ -9,5 +9,6 @@ namespace BookStore.Contracts
     public interface IStoreAppService : IApplicationService, IScopedDependency
     {
         Task<List<StoreOutputDto>> GetStores();
+        Task AddStore(AddStoreInputDto input);
     }
 }

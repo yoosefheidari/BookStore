@@ -57,8 +57,6 @@ namespace BookStore.Implementations
 
             var mappedResult = ObjectMapper.Map<List<Book>, List<BookOutputDto>>(books);
 
-
-
             foreach (var book in mappedResult)
             {
                 var cache = _cacheService.Get(book.Id.ToString());
@@ -84,7 +82,6 @@ namespace BookStore.Implementations
                     book.Covers.Add(image.Content);
                 }
             }
-
             return mappedResult;
         }
 

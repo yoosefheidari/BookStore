@@ -31,7 +31,9 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Localization\BookStore\*.json" />
-    <Content Remove="Localization\BookStore\*.json" />
+  </ItemGroup>
+
+  <ItemGroup>
   </ItemGroup>
 
 </Project>

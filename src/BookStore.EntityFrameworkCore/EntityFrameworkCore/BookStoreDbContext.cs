@@ -105,7 +105,8 @@ public class BookStoreDbContext :
             //b.Property(x => x.StoreId).HasConversion(v => v.Id, z => new StoreId(z));
             b.ConfigureByConvention();
             // b.HasMany("Comments").WithOne("Book").HasForeignKey("BookId");
-            b.OwnsOne(v => v.Price).Property(d => d.Value).HasColumnName("Value");
+            //b.OwnsOne(v => v.Price).Property(d => d.Value).HasColumnName("Price");
+            b.Property(x => x.Price).HasConversion(v => v.Value, z => new Price(z));
         });
 
         builder.Entity<Comment>(b =>

@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
+using System;
+using System.Threading.Tasks;
 
 namespace BookStore;
 
@@ -15,6 +15,7 @@ public class Program
         try
         {
             Log.Information("Starting BookStore.HttpApi.Host.");
+
             var builder = WebApplication.CreateBuilder(args);
             builder.Host
                 .AddAppSettingsSecretsJson()
@@ -28,7 +29,7 @@ public class Program
             .MinimumLevel.Information()
 #endif
                         .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                        .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+                        .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Verbose)
                         .Enrich.FromLogContext()
                         .WriteTo.Async(c => c.File("Logs/logs.txt"))
                         .WriteTo.Async(c => c.Console())

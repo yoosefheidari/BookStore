@@ -12,7 +12,7 @@ public class BookStoreApplicationAutoMapperProfile : Profile
     public BookStoreApplicationAutoMapperProfile()
     {
         CreateMap<Book, BookOutputDto>()
-            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price.Value))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price.Value.ToString()))
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Id));
 
         CreateMap<Store, StoreOutputDto>()
@@ -36,5 +36,7 @@ public class BookStoreApplicationAutoMapperProfile : Profile
 
         CreateMap<SaveCoverInputDto, BookCover>()
            .ForMember(dest => dest.BookId, opt => opt.MapFrom(src => new BookId(src.BookId)));
+
+        CreateMap<AddStoreInputDto, Store>();
     }
 }

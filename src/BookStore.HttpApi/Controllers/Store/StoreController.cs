@@ -1,10 +1,12 @@
 ﻿using BookStore.Contracts;
+using BookStore.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace BookStore.Controllers.Store
 {
     [ApiController]
+    [Route("Stores")]
     public class StoreController : BookStoreController
     {
         private readonly IStoreAppService _storeAppService;
@@ -14,10 +16,17 @@ namespace BookStore.Controllers.Store
             _storeAppService = storeAppService;
         }
 
-        [HttpGet("SetStores")]
+        [HttpGet("GetList")]
         public async Task<IActionResult> GetStores()
         {
             return Ok(await _storeAppService.GetStores());
+        }
+
+        [HttpPost("Add")]
+        public async Task<IActionResult> AddStore(AddStoreInputDto inputDto)
+        {
+            await _storeAppService.AddStore(inputDto);
+            return Ok();
         }
 
     }

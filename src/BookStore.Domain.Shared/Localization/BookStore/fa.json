@@ -1,0 +1,10 @@
+﻿{
+  "culture": "fa",
+  "texts": {
+    "Menu:Home": "خانه",
+    "Menu:ContactUs": "تماس با ما",
+    "Home": "خانه",
+    "Welcome": "خوش آمدید",
+    "LongWelcomeMessage": "به فروشگاه کتاب خوش آمدید"
+  }
+}

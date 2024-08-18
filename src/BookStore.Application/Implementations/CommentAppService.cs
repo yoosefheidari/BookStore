@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Caching;
 
 namespace BookStore.Implementations
 {
@@ -13,16 +14,19 @@ namespace BookStore.Implementations
     public class CommentAppService : ApplicationService, ICommentAppService
     {
         private readonly ICommentRepository _commentRepository;
+        private readonly IDistributedCache<BookRatingCacheDto> _cacheService;
 
-        public CommentAppService(ICommentRepository commentRepository)
+        public CommentAppService(ICommentRepository commentRepository, IDistributedCache<BookRatingCacheDto> cacheService)
         {
             _commentRepository = commentRepository;
+            _cacheService = cacheService;
         }
 
         public async Task AddComment(AddCommentInputDto commentInfo)
         {
             var comment = ObjectMapper.Map<AddCommentInputDto, Comment>(commentInfo);
             await _commentRepository.AddComment(comment);
+            _cacheService.Set(commentInfo.BookId.ToString(), null);
         }
 
         public async Task AddDislike(LikeInputDto likeInfo)

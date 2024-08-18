@@ -9,5 +9,15 @@ namespace BookStore.Aggregates.Store
         public string Title { get; set; }
         public DateTime CreatedAt { get; set; }
         public Guid? TenantId { get; set; }
+
+        public void SetCreationTime(DateTime creationTime)
+        {
+            CreatedAt = creationTime;
+        }
+
+        public void SetTenantId(Guid tenantId)
+        {
+            TenantId = tenantId;
+        }
     }
 }
