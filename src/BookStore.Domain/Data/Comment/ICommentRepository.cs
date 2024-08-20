@@ -1,17 +1,19 @@
-﻿using BookStore.Aggregates.Comment;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
+using NS = BookStore.Aggregates.Comment;
 
 namespace BookStore.Data.Comment
 {
-    public interface ICommentRepository : IBasicRepository<BookStore.Aggregates.Comment.Comment, CommentId>, IScopedDependency
+    public interface ICommentRepository : IBasicRepository<NS.Comment, NS.CommentId>, IScopedDependency
     {
-        Task<List<BookStore.Aggregates.Comment.Comment>> GetComments();
-        Task<List<BookStore.Aggregates.Comment.Comment>> GetCommentsByBookId(int bookId);
-        Task AddComment(BookStore.Aggregates.Comment.Comment comment);
-        Task AddLike(int CommentId);
-        Task AddDislike(int CommentId);
+        Task<List<NS.Comment>> GetComments();
+        Task<List<NS.Comment>> GetCommentsByBookId(int bookId);
+        Task AddComment(NS.Comment comment);
+        Task AddLike(NS.Comment comment);
+        Task AddDislike(NS.Comment comment);
+        Task<NS.Comment> GetCommentById(int CommentId, CancellationToken cancellationToken);
     }
 }

@@ -10,5 +10,6 @@ namespace BookStore.Contracts
     {
         Task AddBook(AddBookInputDto bookInfo);
         Task<List<BookOutputDto>> GetBooks();
+
     }
 }

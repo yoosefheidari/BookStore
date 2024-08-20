@@ -19,12 +19,12 @@ namespace BookStore.Implementations
     {
         private readonly IBookRepository _bookRepository;
         private readonly ICommentRepository _commentRepository;
-        private readonly IBookService _bookService;
+        private readonly IBookRating _bookService;
         private readonly IFileAppService _fileAppService;
         private readonly IDistributedCache<BookRatingCacheDto> _cacheService;
 
         public BookAppService(IBookRepository bookRepository
-            , IBookService bookService, ICommentRepository commentRepository
+            , IBookRating bookService, ICommentRepository commentRepository
             , IFileAppService fileAppService
             , IDistributedCache<BookRatingCacheDto> cacheService)
         {
@@ -67,7 +67,9 @@ namespace BookStore.Implementations
                     var comments = await _commentRepository.GetCommentsByBookId(book.Id);
                     if (comments != null && comments.Count > 0)
                     {
+
                         var rating = _bookService.GetBookRating(comments);
+
                         book.Rating = rating;
                         var bookRating = new BookRatingCacheDto() { Rating = rating };
                         _cacheService.Set(book.Id.ToString(), bookRating);
@@ -81,10 +83,10 @@ namespace BookStore.Implementations
                     var image = await _fileAppService.GetBlobAsync(input);
                     book.Covers.Add(image.Content);
                 }
+
+
             }
             return mappedResult;
         }
-
-
     }
 }

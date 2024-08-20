@@ -31,12 +31,15 @@ namespace BookStore.Implementations
 
         public async Task AddDislike(LikeInputDto likeInfo)
         {
-            await _commentRepository.AddDislike(likeInfo.CommentId);
+            var comment = await _commentRepository.GetCommentById(likeInfo.CommentId, default);
+            comment.DislikeCount++;
+            // await _commentRepository.AddLike(comment);
         }
 
         public async Task AddLike(LikeInputDto likeInfo)
         {
-            await _commentRepository.AddLike(likeInfo.CommentId);
+            var comment = await _commentRepository.GetCommentById(likeInfo.CommentId, default);
+            comment.LikeCount++;
         }
 
         public async Task<List<CommentOutputDto>> GetComments()

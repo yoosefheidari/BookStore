@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
+using Volo.Abp.MultiTenancy;
 
 namespace BookStore.Controllers.Book
 {
@@ -12,15 +13,18 @@ namespace BookStore.Controllers.Book
     public class BookController : BookStoreController
     {
         private readonly IBookAppService _bookAppService;
+        private readonly ICurrentTenant currentTenant;
 
-        public BookController(IBookAppService bookAppService)
+        public BookController(IBookAppService bookAppService, ICurrentTenant currentTenant)
         {
             _bookAppService = bookAppService;
+            this.currentTenant = currentTenant;
         }
 
         [HttpGet("GetList")]
         public async Task<IActionResult> GetBooks()
         {
+            var c = currentTenant;
             var str = L["Home"];
             var rqf = Request.HttpContext.Features.Get<IRequestCultureFeature>()?.RequestCulture.Culture;
             return Ok(await _bookAppService.GetBooks());

@@ -5,7 +5,7 @@ using Volo.Abp.Domain.Services;
 
 namespace BookStore.Services.Contracts
 {
-    public interface IBookService : IDomainService, IScopedDependency
+    public interface IBookRating : IDomainService, IScopedDependency
     {
         public double GetBookRating(List<Comment> comments);
     }

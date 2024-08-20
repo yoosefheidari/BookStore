@@ -6,7 +6,7 @@ using Volo.Abp.Domain.Services;
 
 namespace BookStore.Services.Implementations
 {
-    public class BookService : DomainService, IBookService
+    public class BookService : DomainService, IBookRating
     {
         public double GetBookRating(List<Comment> comments)
         {
