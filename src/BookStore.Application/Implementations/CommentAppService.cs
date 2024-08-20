@@ -26,14 +26,12 @@ namespace BookStore.Implementations
         {
             var comment = ObjectMapper.Map<AddCommentInputDto, Comment>(commentInfo);
             await _commentRepository.AddComment(comment);
-            _cacheService.Set(commentInfo.BookId.ToString(), null);
         }
 
         public async Task AddDislike(LikeInputDto likeInfo)
         {
             var comment = await _commentRepository.GetCommentById(likeInfo.CommentId, default);
             comment.DislikeCount++;
-            // await _commentRepository.AddLike(comment);
         }
 
         public async Task AddLike(LikeInputDto likeInfo)

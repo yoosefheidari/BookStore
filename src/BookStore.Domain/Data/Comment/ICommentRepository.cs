@@ -12,8 +12,6 @@ namespace BookStore.Data.Comment
         Task<List<NS.Comment>> GetComments();
         Task<List<NS.Comment>> GetCommentsByBookId(int bookId);
         Task AddComment(NS.Comment comment);
-        Task AddLike(NS.Comment comment);
-        Task AddDislike(NS.Comment comment);
         Task<NS.Comment> GetCommentById(int CommentId, CancellationToken cancellationToken);
     }
 }

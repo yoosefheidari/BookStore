@@ -6,6 +6,7 @@ using BookStore.Dtos;
 using BookStore.Localization;
 using BookStore.Services.Contracts;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
@@ -56,6 +57,7 @@ namespace BookStore.Implementations
             var books = await _bookRepository.GetBooks();
 
             var mappedResult = ObjectMapper.Map<List<Book>, List<BookOutputDto>>(books);
+            mappedResult.First().TotalCount = 0;
 
             foreach (var book in mappedResult)
             {

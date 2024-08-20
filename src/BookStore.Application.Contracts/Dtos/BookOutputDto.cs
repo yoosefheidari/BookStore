@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Abp.Application.Services.Dto;
+using System.Collections.Generic;
 
 namespace BookStore.Dtos
 {
-    public class BookOutputDto
+    public class BookOutputDto : PagedResultDto<BookOutputDto>
     {
         public int Id { get; set; }
         public string Title { get; set; }

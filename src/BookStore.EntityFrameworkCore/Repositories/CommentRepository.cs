@@ -28,22 +28,6 @@ namespace BookStore.Repositories
         public async Task AddComment(Comment comment)
         {
             await DbContext.Comments.AddAsync(comment);
-            await _unitOfWork.SaveChangesAsync();
-
-        }
-
-        public async Task AddDislike(Comment comment)
-        {
-            //var comments = await DbContext.Comments.ToListAsync();
-            //var comment = comments.Where(x => x.Id.Id == CommentId).FirstOrDefault();
-            //if (comment != null) comment.DislikeCount++;
-            //else throw new BusinessException("there is no comment!!");
-            //await _unitOfWork.SaveChangesAsync();
-        }
-
-        public async Task AddLike(Comment comment)
-        {
-            //await DbContext.Update(comment);
         }
 
         public async Task<Comment> GetCommentById(int CommentId, CancellationToken cancellationToken)
