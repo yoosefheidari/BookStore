@@ -3,6 +3,7 @@ using BookStore.Contracts;
 using BookStore.Dtos;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp.MultiTenancy;
@@ -23,8 +24,10 @@ namespace BookStore.Controllers.Book
         }
 
         [HttpPost("GetList")]
+        [OutputCache()]
         public async Task<IActionResult> GetBooks(PagedResultRequestDto requestDto)
         {
+
             var c = currentTenant;
             var str = L["Home"];
             var rqf = Request.HttpContext.Features.Get<IRequestCultureFeature>()?.RequestCulture.Culture;

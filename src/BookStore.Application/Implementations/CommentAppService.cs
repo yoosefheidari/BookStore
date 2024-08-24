@@ -1,4 +1,5 @@
-﻿using BookStore.Aggregates.Comment;
+﻿using BookStore.Aggregates.Book;
+using BookStore.Aggregates.Comment;
 using BookStore.Contracts;
 using BookStore.Data.Comment;
 using BookStore.Dtos;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Caching;
+using Volo.Abp.Domain.Repositories;
 
 namespace BookStore.Implementations
 {
@@ -17,12 +19,17 @@ namespace BookStore.Implementations
         private readonly ICommentRepository _commentRepository;
         private readonly IDistributedCache<BookRatingCacheDto> _cacheService;
         private readonly IBookRatingService _bookRatingService;
+        private readonly IRepository<Book, BookId> _bookRepository;
 
-        public CommentAppService(ICommentRepository commentRepository, IDistributedCache<BookRatingCacheDto> cacheService, IBookRatingService bookRatingService)
+        public CommentAppService(ICommentRepository commentRepository,
+            IDistributedCache<BookRatingCacheDto> cacheService,
+            IBookRatingService bookRatingService,
+            IRepository<Book, BookId> bookRepository)
         {
             _commentRepository = commentRepository;
             _cacheService = cacheService;
             _bookRatingService = bookRatingService;
+            _bookRepository = bookRepository;
         }
 
         public async Task AddComment(AddCommentInputDto commentInfo)
@@ -32,7 +39,8 @@ namespace BookStore.Implementations
             var commentsRating = await _commentRepository.GetCommentsRatingByBookId(commentInfo.BookId);
             commentsRating.Add(commentInfo.Rating);
             var rating = _bookRatingService.CalculateBookRating(commentsRating);
-            var book = await _bookRatingService.GetBookById(commentInfo.BookId);
+            var bookId = ObjectMapper.Map<int, BookId>(commentInfo.BookId);
+            var book = await _bookRepository.GetAsync(bookId);
             book.SetRating(rating);
         }
 

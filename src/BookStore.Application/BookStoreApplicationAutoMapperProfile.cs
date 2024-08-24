@@ -37,8 +37,12 @@ public class BookStoreApplicationAutoMapperProfile : Profile
            .ForMember(dest => dest.BookId, opt => opt.MapFrom(src => new BookId(src.BookId)));
 
         CreateMap<AddStoreInputDto, Store>();
+
         CreateMap<int, CommentId>()
             .ConstructUsing(x => new CommentId(x));
+
+        CreateMap<int, BookId>()
+            .ConstructUsing(x => new BookId(x));
 
         CreateMap<Tenant, TenantDto>();
     }

@@ -61,7 +61,7 @@ public class BookStoreDbContext :
     public DbSet<Aggregates.Book.Book> Books { get; set; }
     public DbSet<Store> Stores { get; set; }
     public DbSet<Comment> Comments { get; set; }
-    public DbSet<BookCover> bookCovers { get; set; }
+    public DbSet<BookCover> BookCovers { get; set; }
 
     #endregion
 
