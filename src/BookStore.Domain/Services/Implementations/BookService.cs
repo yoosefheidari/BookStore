@@ -1,17 +1,32 @@
-﻿using BookStore.Aggregates.Comment;
+﻿using BookStore.Aggregates.Book;
+using BookStore.Data.Book;
 using BookStore.Services.Contracts;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Volo.Abp.Domain.Services;
 
 namespace BookStore.Services.Implementations
 {
-    public class BookService : DomainService, IBookRating
+    public class BookRatingService : DomainService, IBookRatingService
     {
-        public double GetBookRating(List<Comment> comments)
+        private readonly IBookRepository _bookRepository;
+
+        public BookRatingService(IBookRepository bookRepository)
         {
-            var ratings = comments.Average(x => x.Rating.Rate);
+            _bookRepository = bookRepository;
+        }
+
+        public double CalculateBookRating(List<byte> comments)
+        {
+            var ratings = comments.Average(x => x);
             return ratings;
+        }
+
+        public async Task<Book> GetBookById(int id)
+        {
+            var bookid = new BookId(id);
+            return await _bookRepository.GetBookById(bookid);
         }
     }
 }

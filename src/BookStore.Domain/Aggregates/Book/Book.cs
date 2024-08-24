@@ -12,5 +12,11 @@ namespace BookStore.Aggregates.Book
         public DateTime PublishDate { get; private set; }
         public Guid? TenantId { get; private set; }
         public int StoreId { get; private set; }
+        public double rating { get; private set; }
+
+        public void SetRating(double inputRating)
+        {
+            rating = inputRating;
+        }
     }
 }

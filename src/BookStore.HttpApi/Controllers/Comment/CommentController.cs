@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 namespace BookStore.Controllers.Comment
 {
     [ApiController]
+    [Route("Comments")]
     public class CommentController : BookStoreController
     {
         private readonly ICommentAppService _commentAppService;
@@ -15,17 +16,17 @@ namespace BookStore.Controllers.Comment
             _commentAppService = commentAppService;
         }
 
-        [HttpPost("AddComment")]
+        [HttpPost("Add")]
         public async Task<IActionResult> AddComment(AddCommentInputDto addComment)
         {
             await _commentAppService.AddComment(addComment);
             return Ok();
         }
 
-        [HttpGet("GetComments")]
-        public async Task<IActionResult> GetStoreBooks()
+        [HttpGet("GetList")]
+        public async Task<IActionResult> GetComments(int bookId)
         {
-            return Ok(await _commentAppService.GetComments());
+            return Ok(await _commentAppService.GetComments(bookId));
         }
 
         [HttpPost("AddLike")]

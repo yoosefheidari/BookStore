@@ -1,4 +1,5 @@
-﻿using BookStore.Contracts;
+﻿using Abp.Application.Services.Dto;
+using BookStore.Contracts;
 using BookStore.Dtos;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,13 +22,13 @@ namespace BookStore.Controllers.Book
             this.currentTenant = currentTenant;
         }
 
-        [HttpGet("GetList")]
-        public async Task<IActionResult> GetBooks()
+        [HttpPost("GetList")]
+        public async Task<IActionResult> GetBooks(PagedResultRequestDto requestDto)
         {
             var c = currentTenant;
             var str = L["Home"];
             var rqf = Request.HttpContext.Features.Get<IRequestCultureFeature>()?.RequestCulture.Culture;
-            return Ok(await _bookAppService.GetBooks());
+            return Ok(await _bookAppService.GetBooks(requestDto));
         }
 
         [HttpPost("Add")]

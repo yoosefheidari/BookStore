@@ -2,26 +2,18 @@
 using BookStore.Data.Book;
 using BookStore.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
-using Volo.Abp.MultiTenancy;
-using Volo.Abp.Uow;
 
 namespace BookStore.Repositories
 {
     public class BookRepository : EfCoreRepository<BookStoreDbContext, Aggregates.Book.Book, BookId>, IBookRepository
     {
-        private readonly ICurrentTenant _currentTenant;
-        private readonly IUnitOfWork _unitOfWork;
-        public BookRepository(IDbContextProvider<BookStoreDbContext> dbContextProvider, ICurrentTenant currentTenant, IUnitOfWork unitOfWork) : base(dbContextProvider)
+        public BookRepository(IDbContextProvider<BookStoreDbContext> dbContextProvider) : base(dbContextProvider)
         {
-            _currentTenant = currentTenant;
-            _currentTenant.Change(new Guid("14FCFBF0-A85C-46EC-8940-5F587AAEC761"));
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<int> AddBook(Aggregates.Book.Book book)
@@ -34,27 +26,29 @@ namespace BookStore.Repositories
         public async Task AddCover(BookCover cover)
         {
             await DbContext.bookCovers.AddAsync(cover);
-            await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<List<Aggregates.Book.Book>> GetBooks()
+        public async Task<Book> GetBookById(BookId bookId)
         {
+            return await DbContext.Books.Where(x => x.Id == bookId).FirstOrDefaultAsync();
+        }
 
-            try
-            {
-                var t = await DbContext.Books.ToListAsync();
-                return t;
-            }
-            catch (Exception ex)
-            {
-                return new List<Book>();
-            }
+        public async Task<List<Aggregates.Book.Book>> GetBooks(int skipCount, int maxResultCount)
+        {
+            var y = CurrentTenant.Name;
+            var result = await DbContext.Books.Skip((skipCount - 1) * maxResultCount).Take(maxResultCount).ToListAsync();
+            return result;
         }
 
         public async Task<List<string>> GetCovers(int bookId)
         {
             var result = await DbContext.bookCovers.ToListAsync();
             return result.Where(x => x.BookId.Id == bookId).Select(p => p.Path).ToList();
+        }
+
+        public Task SetBookRating(int bookId, double rating)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -33,7 +33,4 @@
     <EmbeddedResource Include="Localization\BookStore\*.json" />
   </ItemGroup>
 
-  <ItemGroup>
-  </ItemGroup>
-
 </Project>

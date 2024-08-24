@@ -14,10 +14,5 @@ namespace BookStore.Aggregates.Store
         {
             CreatedAt = creationTime;
         }
-
-        public void SetTenantId(Guid tenantId)
-        {
-            TenantId = tenantId;
-        }
     }
 }

@@ -107,6 +107,7 @@ public class BookStoreDbContext :
             // b.HasMany("Comments").WithOne("Book").HasForeignKey("BookId");
             //b.OwnsOne(v => v.Price).Property(d => d.Value).HasColumnName("Price");
             b.Property(x => x.Price).HasConversion(v => v.Value, z => new Price(z));
+            //  b.OwnsOne(v => v.Price, c => { c.Property(v => v.Value).HasColumnName("Price"); });
         });
 
         builder.Entity<Comment>(b =>
@@ -114,9 +115,11 @@ public class BookStoreDbContext :
             b.ToTable(BookStoreConsts.DbTablePrefix + "Comments", BookStoreConsts.DbSchema);
             b.HasKey(b => b.Id);
             b.Property(x => x.Id).HasConversion(v => v.Id, z => new CommentId(z)).ValueGeneratedOnAdd();
-            // b.Property(x => x.BookId).HasConversion(v => v.Id, z => new BookId(z));
+            b.Property(x => x.Rating).HasConversion(v => v.Value, z => new Rating(z));
             b.ConfigureByConvention();
-            b.OwnsOne(c => c.Rating).Property(d => d.Rate).HasColumnName("Rate");
+            //b.OwnsOne(c => c.Rating).Property(d => d.Rate).HasColumnName("Rate");
+            // b.OwnsOne(v => v.Rating, c => { c.Property(v => v.Value).HasColumnName("Rating"); });
+
         });
 
         builder.Entity<Store>(b =>

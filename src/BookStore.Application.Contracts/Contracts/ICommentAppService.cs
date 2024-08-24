@@ -9,7 +9,7 @@ namespace BookStore.Contracts
     public interface ICommentAppService : IApplicationService, IScopedDependency
     {
         Task AddComment(AddCommentInputDto commentInfo);
-        Task<List<CommentOutputDto>> GetComments();
+        Task<List<CommentOutputDto>> GetComments(int bookId);
         Task AddLike(LikeInputDto likeInfo);
         Task AddDislike(LikeInputDto likeInfo);
     }

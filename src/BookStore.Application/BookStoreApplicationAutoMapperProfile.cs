@@ -4,6 +4,7 @@ using BookStore.Aggregates.Comment;
 using BookStore.Aggregates.Store;
 using BookStore.Dtos;
 using System;
+using Volo.Abp.TenantManagement;
 
 namespace BookStore;
 
@@ -23,13 +24,11 @@ public class BookStoreApplicationAutoMapperProfile : Profile
 
         CreateMap<AddBookInputDto, Book>()
             .ForMember(dest => dest.PublishDate, opt => opt.MapFrom(src => DateTime.Now))
-            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => new Price(decimal.Parse(src.Price))))
-            .ForMember(dest => dest.TenantId, opt => opt.MapFrom(src => new Guid("14FCFBF0-A85C-46EC-8940-5F587AAEC761")));
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => new Price(decimal.Parse(src.Price))));
 
         CreateMap<AddCommentInputDto, Comment>()
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.Now))
-            .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => new Rating(src.Rating)))
-            .ForMember(dest => dest.TenantId, opt => opt.MapFrom(src => new Guid("14FCFBF0-A85C-46EC-8940-5F587AAEC761")));
+            .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => new Rating(src.Rating)));
 
         CreateMap<Comment, CommentOutputDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Id));
@@ -38,5 +37,9 @@ public class BookStoreApplicationAutoMapperProfile : Profile
            .ForMember(dest => dest.BookId, opt => opt.MapFrom(src => new BookId(src.BookId)));
 
         CreateMap<AddStoreInputDto, Store>();
+        CreateMap<int, CommentId>()
+            .ConstructUsing(x => new CommentId(x));
+
+        CreateMap<Tenant, TenantDto>();
     }
 }

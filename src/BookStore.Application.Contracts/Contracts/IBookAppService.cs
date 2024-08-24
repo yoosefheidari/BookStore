@@ -1,15 +1,14 @@
-﻿using BookStore.Dtos;
-using System.Collections.Generic;
+﻿using Abp.Application.Services.Dto;
+using BookStore.Dtos;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
-using Volo.Abp.DependencyInjection;
 
 namespace BookStore.Contracts
 {
-    public interface IBookAppService : IApplicationService, IScopedDependency
+    public interface IBookAppService : IApplicationService
     {
         Task AddBook(AddBookInputDto bookInfo);
-        Task<List<BookOutputDto>> GetBooks();
+        Task<PagedResultDto<BookOutputDto>> GetBooks(PagedResultRequestDto requestDto);
 
     }
 }

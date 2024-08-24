@@ -24,7 +24,6 @@ namespace BookStore.Implementations
         {
             var store = ObjectMapper.Map<AddStoreInputDto, Store>(input);
             store.SetCreationTime(DateTime.Now);
-            store.SetTenantId(new Guid("14FCFBF0-A85C-46EC-8940-5F587AAEC761"));
             await _storeRepository.AddStore(store);
         }
 
