@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Domain.ChangeTracking;
 
 namespace BookStore.Implementations
 {
@@ -27,6 +28,7 @@ namespace BookStore.Implementations
             await _storeRepository.AddStore(store);
         }
 
+        [DisableEntityChangeTracking]
         public async Task<List<StoreOutputDto>> GetStores()
         {
             var stores = await _storeRepository.GetStores();

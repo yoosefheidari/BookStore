@@ -1,7 +1,7 @@
 ﻿using Abp.Application.Services.Dto;
 using BookStore.Aggregates.Book;
+using BookStore.Aggregates.Comment;
 using BookStore.Contracts;
-using BookStore.Data.Comment;
 using BookStore.Dtos;
 using BookStore.Localization;
 using System;
@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Caching;
+using Volo.Abp.Domain.ChangeTracking;
 using Volo.Abp.Domain.Repositories;
 
 namespace BookStore.Implementations
@@ -17,42 +18,47 @@ namespace BookStore.Implementations
     [RemoteService(IsEnabled = false)]
     public class BookAppService : ApplicationService, IBookAppService
     {
-        private readonly ICommentRepository _commentRepository;
         private readonly IFileAppService _fileAppService;
         private readonly IDistributedCache<BookRatingCacheDto> _cacheService;
         private readonly IRepository<Book, BookId> _bookRepository;
+        private readonly IRepository<Comment, CommentId> _commentRepository;
+        private readonly IRepository<BookCover, BookCoverId> _coverRepository;
 
         public BookAppService(
-            ICommentRepository commentRepository,
+            IRepository<Comment, CommentId> commentRepository,
             IFileAppService fileAppService,
             IDistributedCache<BookRatingCacheDto> cacheService,
-            IRepository<Book, BookId> bookRepository)
+            IRepository<Book, BookId> bookRepository,
+            IRepository<BookCover, BookCoverId> coverRepository)
         {
             LocalizationResource = typeof(BookStoreResource);
             _commentRepository = commentRepository;
             _fileAppService = fileAppService;
             _cacheService = cacheService;
             _bookRepository = bookRepository;
+            _coverRepository = coverRepository;
         }
 
         public async Task AddBook(AddBookInputDto bookInfo)
         {
             var book = ObjectMapper.Map<AddBookInputDto, Book>(bookInfo);
-            var bookId = await _bookRepository.InsertAsync(book, true);
+            var newBook = await _bookRepository.InsertAsync(book, true);
 
             foreach (var image in bookInfo.Images)
             {
-                var fileInfo = new SaveBlobInputDto { BookId = bookId.Id.Id, Image = image };
+                var fileInfo = new SaveBlobInputDto { BookId = newBook.Id.Id, Image = image };
                 var path = await _fileAppService.SaveBlobAsync(fileInfo);
-                var coverInfo = new SaveCoverInputDto { BookId = bookId.Id.Id, Path = path };
+                var coverInfo = new SaveCoverInputDto { BookId = newBook.Id.Id, Path = path };
                 var cover = ObjectMapper.Map<SaveCoverInputDto, BookCover>(coverInfo);
+                var bookCover = await _coverRepository.InsertAsync(cover, true);
                 //await _bookRepository.AddCover(cover);
             }
         }
 
+        [DisableEntityChangeTracking]
         public async Task<PagedResultDto<BookOutputDto>> GetBooks(PagedResultRequestDto requestDto)
         {
-            var books = await _bookRepository.GetListAsync();
+            var books = await _bookRepository.GetPagedListAsync(requestDto.SkipCount, requestDto.MaxResultCount, "Desc");
 
             if (books.Count == 0 || books is null) throw new BusinessException("no result found");
 

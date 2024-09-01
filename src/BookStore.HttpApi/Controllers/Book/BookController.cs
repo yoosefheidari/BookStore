@@ -25,7 +25,19 @@ namespace BookStore.Controllers.Book
 
         [HttpPost("GetList")]
         [OutputCache()]
+        [ResponseCache]
         public async Task<IActionResult> GetBooks(PagedResultRequestDto requestDto)
+        {
+
+            var c = currentTenant;
+            var str = L["Home"];
+            var rqf = Request.HttpContext.Features.Get<IRequestCultureFeature>()?.RequestCulture.Culture;
+            return Ok(await _bookAppService.GetBooks(requestDto));
+        }
+
+        [HttpPost("GetCovers")]
+        [OutputCache()]
+        public async Task<IActionResult> GetBookCovers(int bookId)
         {
 
             var c = currentTenant;

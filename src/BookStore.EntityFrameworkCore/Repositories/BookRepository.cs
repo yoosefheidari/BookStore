@@ -18,6 +18,7 @@ namespace BookStore.Repositories
 
         public async Task<int> AddBook(Book book)
         {
+
             await DbContext.Books.AddAsync(book);
             await DbContext.SaveChangesAsync();
             return book.Id.Id;
@@ -35,7 +36,16 @@ namespace BookStore.Repositories
             var result = await DbContext.Books.AsNoTracking()
                 .Skip(skipCount)
                 .Take(maxResultCount).ToListAsync();
-            return result;
+            //return result;
+
+            var dbContext = await GetDbContextAsync();
+            var query = dbContext.Books
+            .Where(f => f.rating == 2);
+
+            await dbContext.Database.ExecuteSqlRawAsync("DELETE FROM Forms WHERE IsDraft = 1"); //Execute Raw SQL Query
+
+
+            return await query.ToListAsync();
         }
 
         public async Task<List<string>> GetCovers(int bookId)
